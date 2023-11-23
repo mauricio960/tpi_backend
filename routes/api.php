@@ -75,8 +75,11 @@ Route::middleware('jwt-verify')->group(function(){
     });
 
 
-
 });
+
+Route::get('/aplicaciones', [ApiController::class,'aplicaciones']);
+Route::put('/actualizar_apli/{id}', [ApiController::class, 'actualizar_apli']);
+//Route::post('/users', [ApiController::class,'users']);
 
 //Rutas protegidas
 // Route::middleware('jwt-verify')->get('/users', [UserController::class,'index']);

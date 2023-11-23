@@ -2,7 +2,8 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "docker:up": "docker compose up -d"
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
@@ -15,6 +16,13 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-
-    }
+        "express": "^4.18.2",
+        "morgan": "^1.10.0"
+    },
+    "name": "tpi_backend",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/mauricio960/tpi_backend.git",
+    "author": " ",
+    "license": "MIT"
 }
