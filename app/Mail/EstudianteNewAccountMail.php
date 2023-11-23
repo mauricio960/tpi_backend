@@ -35,7 +35,7 @@ class EstudianteNewAccountMail extends Mailable
      */
     public function build()
     {
-        return $this->view('EstudianteNewAccountMail',['password'=>$this->password, 'nombres'=>$this->nombres,'email'=>$this->email]);
+        return $this->view('estudianteNewAccountMail',['password'=>$this->password, 'nombres'=>$this->nombres,'email'=>$this->email]);
     }
 
     /**

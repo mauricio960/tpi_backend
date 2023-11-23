@@ -49,4 +49,10 @@ class User extends Authenticatable implements JWTSubject
        return [];
    }
 
+   public function roles():HasMany
+   {
+    return $this->hasMany(TblNUsuarioRol::class,'fk_usuario');
+   }
+
+
 }

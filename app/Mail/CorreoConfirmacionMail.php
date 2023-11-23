@@ -29,7 +29,7 @@ class CorreoConfirmacionMail extends Mailable
 
     public function build()
     {
-        return $this->view('CorreoConfirmacionMail',['confirmation_code'=>$this->confirmation_code, 'nombres'=>$this->nombres]);
+        return $this->view('correoConfirmacionMail',['confirmation_code'=>$this->confirmation_code, 'nombres'=>$this->nombres]);
     }
 
     /**

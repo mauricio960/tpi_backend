@@ -22,11 +22,12 @@ class EstudianteController extends Controller
             $aplicaciones = TblNAplicacionOferta::where('fk_usuario', $usuario->id)
                             ->where('activo',true)
                             ->get();
-            $aplicaciones->load('oferta.requisitos_aspirante');
-            $aplicaciones->load('oferta.responsabilidades_puesto');
-            $aplicaciones->load('oferta.empresa_ctg');
-            $aplicaciones->load('oferta.puesto_ctg');
-            $aplicaciones->load('oferta.estado_oferta');
+            $aplicaciones->load('oferta.requisitos_aspirante',
+                                'oferta.responsabilidades_puesto',
+                                'oferta.empresa_ctg',
+                                'oferta.puesto_ctg',
+                                'oferta.estado_oferta');
+            $aplicaciones->load('estado_aplicacion_oferta');
 
             return response()->json([
                 'success'=> true,
@@ -57,6 +58,7 @@ class EstudianteController extends Controller
             $aplicacionOferta = new TblNAplicacionOferta();
             $aplicacionOferta->fk_usuario = $usuario->id;
             $aplicacionOferta->fk_oferta = $oferta->id;
+            $aplicacionOferta->fk_estado_aplicacion_oferta=1; //Enviada.
             $aplicacionOferta->save();
 
             return response()->json([
@@ -99,6 +101,47 @@ class EstudianteController extends Controller
                 'success'=>false,
                 'error'=>$error,
                 'message'=>'Ocurrió un error al obtener la aplicación a la oferta.'
+            ]);
+        }
+    }
+
+    /**
+     * Obtiene las ofertas disponibles.
+     */
+    public function getOfertasDisponibles(Request $request){
+        $usuario = User::find($request->get("usuario_tk"));
+        try{
+
+            $aplicaciones = TblNAplicacionOferta::where('fk_usuario', $usuario->id)
+                            ->where('activo',true)
+                            ->get();
+            $aplicaciones->load('oferta');
+
+            $ofertas_id =[];
+            foreach($aplicaciones as $aplicacion){
+                array_push($ofertas_id, $aplicacion->oferta->id);
+            }
+
+
+            $ofertas = TblNOferta::whereNotIn('id',$ofertas_id)->get();
+
+            $ofertas->load('requisitos_aspirante');
+            $ofertas->load('responsabilidades_puesto');
+            $ofertas->load('empresa_ctg');
+            $ofertas->load('puesto_ctg');
+            $ofertas->load('estado_oferta');
+
+            return response()->json([
+                'ofertas'=>$ofertas
+            ]);
+
+
+        }catch(\Exception $e){
+            $error = $e->getMessage();
+            return response()->json([
+                'success'=>false,
+                'error'=>$error,
+                'message'=>'Ocurrió un error al obtener las ofertas.'
             ]);
         }
     }

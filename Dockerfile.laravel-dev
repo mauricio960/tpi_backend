@@ -1,14 +1,24 @@
 # Use the official PHP image as the base image
 FROM php:8.1.0-apache
 
-# Install required extensions and dependencies
-RUN apt-get update && apt-get install -y \
-    libzip-dev \
-    unzip \
-    && docker-php-ext-install zip pdo_mysql
-
 # Set the working directory in the container
 WORKDIR /var/www/html
+
+
+# Install required extensions and dependencies
+RUN apt-get update && apt-get install -y \
+    cron \
+    libzip-dev \
+    unzip \
+    wget \
+    && docker-php-ext-install zip pdo_mysql
+
+
+# Instala dockerize
+RUN wget https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v0.6.1.tar.gz \
+    && rm dockerize-linux-amd64-v0.6.1.tar.gz
+
 
 # Copy composer.json and composer.lock to install dependencies
 COPY ./composer.json  ./
@@ -30,6 +40,16 @@ RUN composer install
 # Generate the optimized autoloader and clear the cache
 RUN composer dump-autoload --optimize
 
+# # Configura el cron job
+# RUN echo "* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1" > /etc/cron.d/laravel-cron
+# #RUN echo "* * * * * cd /var/www/html && php artisan schedule:run >> /var/www/html/cron.log 2>&1" > /etc/cron.d/laravel-cron
+
+
+# # Habilite el cron job
+# RUN crontab /etc/cron.d/laravel-cron
+
+# CMD ["cron", "-f"]
+
 # Set permissions for storage and bootstrap cache
 RUN chown -R www-data:www-data storage bootstrap/cache
 
@@ -38,3 +58,5 @@ EXPOSE 80
 
 # Start Apache in the foreground
 CMD ["apache2-foreground"]
+
+
