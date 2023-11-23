@@ -6,7 +6,11 @@ use App\Models\TblNAptitud;
 use App\Models\TblNEmpresa;
 use App\Models\TblNEstadoAplicacionOferta;
 use App\Models\TblNEstadoOferta;
+use App\Models\TblNPermiso;
 use App\Models\TblNPuesto;
+use App\Models\TblNRecurso;
+use App\Models\TblNRol;
+use App\Models\TblNTipoRecurso;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -397,6 +401,42 @@ class catalogoSeeder extends Seeder
         $estado_aplicacion_oferta->estado_aplicacion_oferta="Retirado por el candidato";
         $estado_aplicacion_oferta->save();
 
+
+        $modulo = new TblNTipoRecurso();
+        $modulo->tipo_recurso = "Servicios";
+        $modulo->save();
+
+        $recurso = new TblNRecurso();
+        $recurso->nombre="Curriculum";
+        $recurso->fk_tipo_recurso =$modulo->id;
+        $recurso->ruta="/administracion-curriculum";
+        $recurso->activo=true;
+        $recurso->save();
+
+
+        $rol_estudiante = new TblNRol();
+        $rol_estudiante->nombre="Estudiante";
+        $rol_estudiante->activo=true;
+        $rol_estudiante->save();
+
+        $permiso = new TblNPermiso();
+        $permiso->fk_recurso=$recurso->id;
+        $permiso->fk_rol = $rol_estudiante->id;
+        $permiso->activo=true;
+        $permiso->save();
+
+        $recurso = new TblNRecurso();
+        $recurso->nombre="Ofertas Empleo";
+        $recurso->fk_tipo_recurso =$modulo->id;
+        $recurso->ruta="/ofertas-empleo";
+        $recurso->activo=true;
+        $recurso->save();
+
+        $permiso = new TblNPermiso();
+        $permiso->fk_recurso=$recurso->id;
+        $permiso->fk_rol = $rol_estudiante->id;
+        $permiso->activo=true;
+        $permiso->save();
 
 
 

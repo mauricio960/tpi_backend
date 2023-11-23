@@ -14,36 +14,21 @@ class OfertaController extends Controller
         try{
 
             //Creamos una instanacia de Guzzle Client.
-            $client = new Client(['base_uri' => 'https://schopoapp.chickenkiller.com/api/api/']);
+            $client = new Client(['base_uri' => 'https://run.mocky.io/']);
 
             //Especifica la URL del endpoint que se desea consumir.
-            //$endpoint = 'https://run.mocky.io/v3/7d9e762a-1d95-4975-8b1a-182a740ffcc8';
-
-            $endpoint = 'inicializar_facilitador';
+            $endpoint = 'https://run.mocky.io/v3/f65fb26c-0bd5-4031-b502-65220da53450';
 
             $respuesta = '';
 
-            $promise = $client->getAsync('https://schopoapp.chickenkiller.com/api/api/'.$endpoint)->then(
+            $promise = $client->getAsync($endpoint)->then(
                 function($response) use (&$respuesta){
-                    //var_dump('Entro');
                     $respuesta = $response->getBody()->getContents();
                 }
             )->wait();
 
-            // $promise->then(
-            //     function(ResponseInterface $response) use($respuesta){
-            //         var_dump('Entro');
-            //         dump("entro");
-            //         $respuesta = $response->getBody();
-            //     }
-            // );
-
-
-            // $response = $client->request('GET', $endpoint);
-
+            //ES NECESARIO QUE las llaves del json vengan en comillas en algunos casos, si esto sale null.
             $data = json_decode($respuesta,true);
-            //Obtiene el contenido de la respuesta.
-            //$data = json_decode($response->getBody(),true);
 
             return response()->json($data, 200);
 

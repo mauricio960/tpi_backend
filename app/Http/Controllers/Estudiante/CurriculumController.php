@@ -7,12 +7,15 @@ use App\Models\TblNAptitud;
 use App\Models\TblNAptitudCurriculum;
 use App\Models\TblNCurriculum;
 use App\Models\TblNEmpresa;
+use App\Models\TblNEstudiante;
 use App\Models\TblNExperienciaAcademica;
 use App\Models\TblNExperienciaLaboral;
 use App\Models\TblNPuesto;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CurriculumController extends Controller
 {
@@ -25,19 +28,37 @@ class CurriculumController extends Controller
     public function getCurriculumEstudiante(Request $request){
         try{
             $usuario = User::findOrFail($request->get('usuario_tk'));
+            $estudiante = TblNEstudiante::find($usuario->fk_estudiante);
             $curriculum = TblNCurriculum::where('fk_usuario',$usuario->id)->first();
-            if($curriculum != null){
-                $curriculum->load('experiencias_laborales.empresa_ctg');
-                $curriculum->load('experiencias_laborales.puesto_ctg');
-                $curriculum->load('experiencias_academicas');
-            }else{
+            $documento = null;
+            $imagen = null;
+            if($usuario->ruta_imagen != null){
+                $imagePath = storage_path('app/public/' . $usuario->ruta_imagen);
+                $imagen = base64_encode(file_get_contents($imagePath));
+            }
+
+
+            if($curriculum == null){
                 $curriculum = new TblNCurriculum();
                 $curriculum->fk_usuario = $usuario->id;
                 $curriculum->save();
             }
+
+            $curriculum?->load('experiencias_laborales.empresa_ctg','experiencias_laborales.puesto_ctg');
+            $curriculum?->load('experiencias_academicas');
+            $curriculum?->load('aptitudes_curriculum.aptitud');
+
+            // if($curriculum?->ruta_documento != null){
+            //     $documentoPath = storage_path('app/public/documentos_curriculum'. $curriculum->ruta_documento);
+            //     $documento = Storage::get($documentoPath);
+            // }
+            $correo_electronico = $usuario->email;
             return response()->json([
                 'success'=>true,
                 'curriculum'=>$curriculum,
+                'imagen'=>$imagen,
+                'estudiante'=>$estudiante,
+                'correo_electronico'=>$correo_electronico,
             ]);
 
         }catch(\Exception $e){
@@ -46,6 +67,35 @@ class CurriculumController extends Controller
                 "error"=> $error,
                 'success'=>false,
                 'message'=> 'Ocurrio un error al obtener el curriculum del estudiante.',
+            ]);
+        }
+    }
+
+    public function putDatosEstudiante (Request $request){
+        try{
+
+            $usuario = User::find($request->get('usuario_tk'));
+            $curriculum = TblNCurriculum::where('fk_usuario',$usuario->id)->first();
+            ['telefono'=>$telefono, 'descripcion_usuario'=>$descripcion_usuario] = $request->all();
+
+            $estudiante = TblNEstudiante::find($usuario->fk_estudiante);
+            $estudiante->telefono =$telefono;
+            $estudiante->save();
+
+            $curriculum->descripcion_usuario =$descripcion_usuario;
+            $curriculum->save();
+
+            return response()->json([
+                'success'=>true,
+                'message'=>'Cambio realizado correctamente'
+            ]);
+
+        }catch(\Exception $e){
+            $error = $e->getMessage();
+            return response()->json([
+                'error'=> $error,
+                'success'=>false,
+                'message'=> 'Ocurrio un error al actualizar los datos del estudiante en el servidor.',
             ]);
         }
     }
@@ -82,13 +132,20 @@ class CurriculumController extends Controller
 
             $usuario = User::findOrFail($request->get('usuario_tk'));
             $curriculum = TblNCurriculum::where('fk_usuario',$usuario->id)->first();
+            $curriculum_path=null;
 
-            $documento = $request->file('documento_cv');
-            if($documento != null){
+            if($request->file('documento_cv') == true){
                 //Guardando documento en el storage de la aplicacion.
-                $documento_path = $documento->store('public/documentos_curriculum');
+                $documento = $request->file('documento_cv');
+                $nombre_original = $documento->getClientOriginalName();
+                Storage::putFileAs(
+                    'public/documentos_cv', $request->file('documento_cv'), $nombre_original
+                );
+                $curriculum_path = Storage::url('documentos_cv/' . $nombre_original);
+            }
 
-                $curriculum->ruta_documento=$documento_path;
+            if($curriculum_path != null){
+                $curriculum->ruta_documento = $curriculum_path;
                 $curriculum->save();
             }
 
@@ -157,28 +214,33 @@ class CurriculumController extends Controller
 
     public function postExperienciaLaboral(Request $request){
         try{
-            ['empresa'=>$empresa,
+            [
             'fk_empresa'=>$fk_empresa,
             'fk_puesto'=>$fk_puesto,
-            'puesto'=>$puesto,
-            'duracion'=>$duracion] = $request->all();
+            'fecha_inicio'=>$fecha_inicio,
+            'fecha_finalizacion'=>$fecha_finalizacion] = $request->all();
             $usuario = User::findOrFail($request->get('usuario_tk'));
             $curriculum = TblNCurriculum::where('fk_usuario',$usuario->id)->first();
             $experiencia_laboral = new TblNExperienciaLaboral();
 
+            $fecha_inicio = new DateTime($fecha_inicio);
+            $fecha_finalizacion = new DateTime($fecha_finalizacion);
+
             //obteniendo datos de catalogo.
-            if($fk_empresa != null and $empresa == null){
-                $fk_empresa = TblNEmpresa::find($fk_empresa);
+            if($fk_empresa != null){
+                $fk_empresa = TblNEmpresa::find($fk_empresa['id']);
             }
-            if($fk_puesto != null and $puesto == null){
-                $fk_puesto = TblNPuesto::find($fk_puesto);
+            if($fk_puesto != null){
+                $fk_puesto = TblNPuesto::find($fk_puesto['id']);
             }
             $experiencia_laboral->fk_curriculum = $curriculum->id;
             $experiencia_laboral->fk_empresa = $fk_empresa?->id;
             $experiencia_laboral->fk_puesto = $fk_puesto?->id;
-            $experiencia_laboral->empresa =$empresa;
-            $experiencia_laboral->puesto =$puesto;
-            $experiencia_laboral->duracion =$duracion;
+            $experiencia_laboral->fecha_inicio =$fecha_inicio;
+            $experiencia_laboral->fecha_finalizacion = $fecha_finalizacion;
+            $experiencia_laboral->empresa =null;
+            $experiencia_laboral->puesto =null;
+            $experiencia_laboral->duracion =null;
             $experiencia_laboral->save();
 
             return response()->json([
@@ -280,7 +342,10 @@ class CurriculumController extends Controller
     }
 
     public function postExperienciaAcademica(Request $request){
+        $entra_if=false;
+        $documento_path=null;
         try{
+            DB::beginTransaction();
             $usuario = User::findOrFail($request->get('usuario_tk'));
             $curriculum = TblNCurriculum::where('fk_usuario',$usuario->id)->first();
 
@@ -290,14 +355,32 @@ class CurriculumController extends Controller
             $finalizado = $request->input('finalizado') === 'true';
             $fecha_inicio = $request->input('fecha_inicio');
             $fecha_finalizacion = $request->input('fecha_finalizacion');
-            $documento = $request->file('documento_experiencia');
-            $documento_path=null;
 
-            if($documento != null){
-                //Guardando documento en el storage de la aplicacion.
-                $documento_path = $documento->store('public/documentos_experiencia_academica');
+            //obteniendo el documento de experiencia de venir.
+            if($request->file('documento_experiencia') == true){
+                $entra_if = true;
+                $documento = $request->file('documento_experiencia');
+
+                $extension = $documento->getClientOriginalExtension();
+                $nombre_original = $documento->getClientOriginalName();
+                $nombre_unico = uniqid().".".$extension;
+
+                $documento_path = $nombre_unico;
+
+                // Almacenar el archivo en el sistema de archivos
+                // Storage::putFileAs('public/documentos_experiencia',$documento, $nombre_unico);
+
+                // // $documento_path = Storage::url('documentos_experiencia/' . $nombre_unico);
+                // $documento_path = $documento->storeAs(
+                //     'documento_exp'.uniqid(), $request->get('usuario_tk')
+                // );
+
+                $documento_path = Storage::putFileAs(
+                    'public/documentos_experiencia', $request->file('documento_experiencia'), $nombre_original
+                );
+                $documento_path = Storage::url('documentos_experiencia/' . $nombre_original);
+
             }
-
 
             $fecha_inicio = new DateTime($fecha_inicio);
             $fecha_finalizacion = new DateTime($fecha_finalizacion);
@@ -308,25 +391,28 @@ class CurriculumController extends Controller
             $experiencia_academica->titulo = $titulo;
             $experiencia_academica->finalizado = $finalizado;
             $experiencia_academica->fecha_inicio = $fecha_inicio;
-            $experiencia_academica->fecha_finalizado = $fecha_finalizacion;
-            if($documento != null){
-                $experiencia_academica->ruta_documento =$documento_path;
-            }
+            $experiencia_academica->fecha_finalizacion = $fecha_finalizacion;
+            $experiencia_academica->ruta_documento =$documento_path;
             $experiencia_academica->save();
+            DB::commit();
 
             return response()->json([
                 'success'=>true,
-                'message'=>'Se ha guardado la experiencia academica correctamente.'
+                'message'=>'Se ha guardado la experiencia academica correctamente.',
+                'entra_if'=>$entra_if,
+                'documento_path'=>$documento_path,
             ]);
 
 
 
         }catch(\Exception $e){
+            DB::rollBack();
             $error = $e->getMessage();
             return response()->json([
                 'error'=> $error,
                 'message'=> 'Ocurrio un error al guardar la experiencia academica.',
                 'success'=>false,
+                'entra_if'=>$entra_if,
             ]);
         }
     }
@@ -401,6 +487,8 @@ class CurriculumController extends Controller
         }
     }
 
+
+
     public function inicializarAptitudCurriculum(Request $request){
         try{
             $aptitudes = TblNAptitud::all();
@@ -446,15 +534,57 @@ class CurriculumController extends Controller
 
     public function postAptitudCurriculum(Request $request){
         try{
-            ['fk_aptitud'=>$fk_aptitud] = $request->all();
+            // ['fk_aptitud'=>$fk_aptitud] = $request->all();
+            // $usuario = User::findOrFail($request->get('usuario_tk'));
+            // $curriculum = TblNCurriculum::where('fk_usuario',$usuario->id)->first();
+
+            // $aptitud = TblNAptitud::find($fk_aptitud)->first();
+            // $aptitud_curriculum = new TblNAptitudCurriculum();
+            // $aptitud_curriculum->fk_curriculum = $curriculum->id;
+            // $aptitud_curriculum->fk_aptitud = $aptitud->id;
+            // $aptitud_curriculum->save();
+            ['lista_aptitudes_cv'=>$lista_aptitudes_cv] = $request->all();
             $usuario = User::findOrFail($request->get('usuario_tk'));
             $curriculum = TblNCurriculum::where('fk_usuario',$usuario->id)->first();
 
-            $aptitud = TblNAptitud::find($fk_aptitud)->first();
-            $aptitud_curriculum = new TblNAptitudCurriculum();
-            $aptitud_curriculum->fk_curriculum = $curriculum->id;
-            $aptitud_curriculum->fk_aptitud = $aptitud->id;
-            $aptitud_curriculum->save();
+            foreach($lista_aptitudes_cv as $aptitud_it){
+               if($aptitud_it != null){
+                $coincidencia = TblNAptitudCurriculum::where('fk_curriculum',$curriculum->id)
+                ->where('fk_aptitud',$aptitud_it['id'])->first();
+                if($coincidencia){
+                    //Existe.
+                    $coincidencia->activo=true;
+                    $coincidencia->save();
+                }else{
+                    $aptitud = TblNAptitud::find($aptitud_it['id']);
+                    $n_aptitud_cv = new TblNAptitudCurriculum();
+                    $n_aptitud_cv->fk_curriculum = $curriculum->id;
+                    $n_aptitud_cv->fk_aptitud = $aptitud->id;
+                    $n_aptitud_cv->activo = true;
+                    $n_aptitud_cv->save();
+                }
+               }
+            }//foreach.
+
+            $lista_ids_aptitudes =[];
+            foreach($lista_aptitudes_cv as $aptitud_it){
+                if($aptitud_it != null){
+                    array_push($lista_ids_aptitudes, $aptitud_it['id']);
+                }
+            }
+            if(sizeof($lista_ids_aptitudes) > 0){
+
+                TblNAptitudCurriculum::where('fk_curriculum',$curriculum->id)
+                    ->where('activo',true)
+                    ->whereNotIn('fk_aptitud', $lista_ids_aptitudes)
+                    ->update(['activo'=>false]);
+
+            }else{
+                TblNAptitudCurriculum::where('fk_curriculum',$curriculum->id)
+                ->where('activo',true)
+                ->update(['activo'=>false]);
+            }
+
 
             return response()->json([
                 'success'=>true,

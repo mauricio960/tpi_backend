@@ -34,7 +34,7 @@ use App\Http\Controllers\OfertaController;
 Route::prefix('auth')->group(function(){
     Route::post('/register',[AuthController::class,'register']);
     Route::post('/login',[AuthController::class,'login']);
-    Route::post('/confirmacion_cuenta',[AuthController::class,'confirmarCuenta']);
+    Route::post('/confirmar_cuenta',[AuthController::class,'confirmarCuenta']);
     Route::middleware('jwt-verify')->get('/permisos',[AuthController::class,'userRoutes']);
 });
 
@@ -47,29 +47,34 @@ Route::middleware('jwt-verify')->group(function(){
         Route::get('/aplicacion_oferta',[EstudianteController::class,'indexAplicacionOferta']);
         Route::post('/aplicacion_oferta',[EstudianteController::class,'postAplicacionOferta']);
         Route::get('/aplicacion_oferta/:id_aplicacion_oferta',[EstudianteController::class,'getAplicacionOferta']);
+
+        Route::get('/ofertas',[EstudianteController::class,'getOfertasDisponibles']);
     });
 
     Route::prefix('curriculum')->group(function(){
         Route::get('/obtener_curriculum',[CurriculumController::class, 'getCurriculumEstudiante']);
+        Route::put('/actualizar_datos_estudiante',[CurriculumController::class,'putDatosEstudiante']);
         Route::get('/inicializar_experiencia_laboral',[CurriculumController::class,'getInicializarExperienciaLaboral']);
         Route::post('/guardar_imagen_curriculum',[CurriculumController::class,'postImagenCurriculumEstudiante']);
         Route::post('/guardar_documento_curriculum',[CurriculumController::class,'postDocumentoCurriculumEstudiante']);
 
         Route::get('/experiencia_laboral',[CurriculumController::class,'getExperienciaLaboral']);
         Route::post('/experiencia_laboral',[CurriculumController::class,'postExperienciaLaboral']);
-        Route::put('/experiencia_laboral/:id_experiencia_laboral',[CurriculumController::class,'updateExperienciaLaboral']);
-        Route::delete('/experiencia_laboral/:id_experiencia_laboral',[CurriculumController::class,'deleteExperienciaLaboral']);
+        Route::delete('/experiencia_laboral/{id_experiencia_laboral}',[CurriculumController::class,'deleteExperienciaLaboral']);
+
+        Route::put('/experiencia_laboral/{id_experiencia_laboral}',[CurriculumController::class,'updateExperienciaLaboral']);
+
 
         Route::get('/experiencia_academica',[CurriculumController::class,'getExperienciaAcademica']);
         Route::post('/experiencia_academica',[CurriculumController::class,'postExperienciaAcademica']);
-        Route::put('/experiencia_academica:/id_experiencia_academica',[CurriculumController::class,'putExperienciaAcademica']);
-        Route::delete('/experiencia_academica:/id_experiencia_academica',[CurriculumController::class,'deleteExperienciaAcademica']);
+        Route::put('/experiencia_academica/{id_experiencia_academica}',[CurriculumController::class,'putExperienciaAcademica']);
+        Route::delete('/experiencia_academica/{id_experiencia_academica}',[CurriculumController::class,'deleteExperienciaAcademica']);
 
         Route::get('/inicializar_aptitud_curriculum',[CurriculumController::class,'inicializarAptitudCurriculum']);
         Route::get('/aptitud_curriculum',[CurriculumController::class,'getAptitudCurriculum']);
         Route::post('/aptitud_curriculum',[CurriculumController::class,'postAptitudCurriculum']);
-        Route::put('/aptitud_curriculum/:id_aptitud_curriculum',[CurriculumController::class,'putAptitudCurriculum']);
-        Route::delete('/aptitud_curriculum/:id_aptitud_curriculum',[CurriculumController::class,'deleteAptitudCurriculum']);
+        Route::put('/aptitud_curriculum/{id_aptitud_curriculum}',[CurriculumController::class,'putAptitudCurriculum']);
+        Route::delete('/aptitud_curriculum/{id_aptitud_curriculum}',[CurriculumController::class,'deleteAptitudCurriculum']);
 
 
     });

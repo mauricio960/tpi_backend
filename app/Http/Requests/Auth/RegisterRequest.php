@@ -31,7 +31,8 @@ class RegisterRequest extends FormRequest
             'segundo_nombre'=>'max:20',
             'primer_apellido'=>'required|max:20',
             'segundo_apellido'=>'max:20',
-            'dui'=>'min:10|MAX:10',
+            'dui'=>'required|min:10|max:10|unique:tbl_n_estudiante',
+            'telefono'=>'min:8|max:8',
         ];
     }
 
@@ -44,7 +45,11 @@ class RegisterRequest extends FormRequest
             'password.min'=>'La contraseña debe tener mínimo 8 caracteres',
             'primer_nombre.required'=>'El primer nombre es requerido',
             'primer_apellido.required'=>'El primer apellido es requerido',
-            'carnet.required'=>'El carnét ya ha sido registrado en el sistema'
+            'carnet.required'=>'El carnét ya ha sido registrado en el sistema',
+            'dui.min'=>'El DUI debe tener 10 caracteres en el formato ########-#',
+            'dui.max'=>'El DUI debe tener 10 caracteres en el formato ########-#',
+            'telefono.min'=>'El teléfono tiene que llevar el formato ########',
+            'telefono.max'=> 'El teléfono tiene que llevar el formato ########',
         ];
     }
 }

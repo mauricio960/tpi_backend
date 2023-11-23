@@ -19,4 +19,9 @@ class TblNAplicacionOferta extends Model
     {
         return $this->belongsTo(TblNOferta::class,'fk_oferta');
     }
+
+    public function estado_aplicacion_oferta():BelongsTo
+    {
+        return $this->belongsTo(TblNEstadoAplicacionOferta::class,'fk_estado_aplicacion_oferta');
+    }
 }

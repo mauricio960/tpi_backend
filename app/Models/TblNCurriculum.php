@@ -26,6 +26,6 @@ class TblNCurriculum extends Model
 
     public function aptitudes_curriculum():HasMany
     {
-        return $this->hasMany(TblNAptitudCurriculum::class,'fk_curriculum');
+        return $this->hasMany(TblNAptitudCurriculum::class,'fk_curriculum')->where('activo',true);
     }
 }

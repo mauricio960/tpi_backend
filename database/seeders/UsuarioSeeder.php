@@ -19,7 +19,7 @@ class UsuarioSeeder extends Seeder
 
         //Creando primer usuario.
         $usuario = new User();
-        $usuario->nombre="salvador";
+        $usuario->nombre="salva";
         $usuario->email="salvadorehchavez@gmail.com";
         $usuario->password="$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi"; //password.
         $usuario->activo=true;

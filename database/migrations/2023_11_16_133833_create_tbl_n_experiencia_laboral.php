@@ -18,8 +18,10 @@ return new class extends Migration
             $table->unsignedBigInteger('fk_curriculum');
             $table->unsignedBigInteger('fk_empresa')->nullable();
             $table->unsignedBigInteger('fk_puesto')->nullable();
-            $table->string('empresa',60);
-            $table->string('duracion',60);
+            $table->datetime('fecha_inicio');
+            $table->datetime('fecha_finalizacion');
+            $table->string('empresa',60)->nullable();
+            $table->string('duracion',60)->nullable();
             $table->string('puesto',60)->nullable();
             $table->timestamps();
 

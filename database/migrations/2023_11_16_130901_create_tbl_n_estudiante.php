@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('primer_apellido',20);
             $table->string('segundo_apellido',20)->nullable();
             $table->string('dui',10)->nullable()->unique();
+            $table->string('telefono',8)->nullable()->unique();
             $table->dateTime('fecha_nacimiento');
             $table->timestamps();
         });

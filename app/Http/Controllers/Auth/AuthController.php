@@ -11,8 +11,10 @@ use App\Mail\EstudianteNewAccountMail;
 use App\Models\TblNEstudiante;
 use App\Models\TblNRol;
 use App\Models\TblNTipoRecurso;
+use App\Models\TblNUsuarioRol;
 use Illuminate\Http\Request;
 use App\Models\User;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -36,16 +38,23 @@ class AuthController extends Controller
         'segundo_nombre'=>$segundo_nombre,
         'primer_apellido'=>$primer_apellido,
         'segundo_apellido'=>$segundo_apellido,
+        'fecha_nacimiento'=>$fecha_nacimiento,
+        'telefono'=>$telefono,
         'dui'=>$dui] = $request->all();
 
       try {
         //code...
         DB::beginTransaction();
+
+        $fecha_nacimiento = new DateTime($fecha_nacimiento);
         $estudiante = new TblNEstudiante();
+        $estudiante->carnet=$carnet;
         $estudiante->primer_nombre =$primer_nombre;
         $estudiante->segundo_nombre=$segundo_nombre;
         $estudiante->primer_apellido=$primer_apellido;
         $estudiante->segundo_apellido=$segundo_apellido;
+        $estudiante->fecha_nacimiento=$fecha_nacimiento;
+        $estudiante->telefono = $telefono;
         $estudiante->dui = $dui;
         $estudiante->save();
 
@@ -56,7 +65,15 @@ class AuthController extends Controller
         $usuario->confirmed = false;
         $confirmation_code = Str::random(25);
         $usuario->confirmation_code = $confirmation_code;
+        $usuario->fk_estudiante = $estudiante->id;
+        $usuario->activo=false;
         $usuario->save();
+
+        $usuario_rol = new TblNUsuarioRol();
+        $usuario_rol->fk_usuario=$usuario->id;
+        $usuario_rol->fk_rol = 1;// Estudiante.
+        $usuario_rol->activo=true;
+        $usuario_rol->save();
         DB::commit();
 
         //ENVIO DE CORREO CON CONFIRMATION CODE
@@ -93,17 +110,17 @@ class AuthController extends Controller
             ],400);
         }
         $usuario = JWTAuth::user();
-        // $roles = $usuario->roles;
-        // $rol = TblNRol::find($roles[0]->fk_rol);
+        $roles = $usuario->roles;
+        $rol = TblNRol::find($roles[0]->fk_rol);
 
-        // $permisos =$rol->permisos_activos;
-        // $ruta = $permisos[0]->recurso->ruta;
+        $permisos =$rol->permisos_activos;
+        $ruta = $permisos[0]->recurso->ruta;
 
 
 
         return response()->json([
             'token'=>$token,
-            // 'ruta'=>$ruta
+            'ruta'=>$ruta
         ],200);
     }//login END
     /**
@@ -113,6 +130,14 @@ class AuthController extends Controller
      */
     public function userRoutes(Request $request){
         $usuario = User::find($request->get('usuario_tk'));
+
+        $nombre='';
+        if($usuario->fk_estudiante == null){
+            $estudiante = TblNEstudiante::find($usuario->fk_estudiante);
+            $nombre = $estudiante->primer_nombre." ".$estudiante->primer_apellido;
+        }else{
+            $nombre = $usuario->nombre;
+        }
         $modulos = TblNTipoRecurso::all();
 
         $lista_modulos=[];
@@ -139,7 +164,7 @@ class AuthController extends Controller
         }//modulos
         return response()->json([
             'permisos'=>$lista_modulos,
-            'usuario'=>$usuario->persona->nombres." ".$usuario->persona->apellidos
+            'usuario'=>$nombre,
         ],200);
 
     } // userRoutes END.
@@ -157,6 +182,7 @@ class AuthController extends Controller
                 $usuario->confirmation_code=null;
                 $password = trim($usuario->password);
                 $usuario->password = Hash::make($password);
+                $usuario->activo=true;
                 $usuario->save();
                 $correo = trim($usuario->email);
                 $enviado = Mail::to($correo)->send( new EstudianteNewAccountMail($password, $usuario->nombre, $usuario->email));

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('fk_usuario');
             $table->string('ruta_documento',200)->nullable();
+            $table->string('descripcion_usuario',400)->nullable();
             $table->foreign('fk_usuario')
             ->references('id')->on('tbl_n_usuario')->onDelete('cascade');
             $table->timestamps();

@@ -38,22 +38,20 @@ services:
       - MYSQL_USER=
       - MYSQL_PASSWORD=
     ports:
-      - "3309:3306"
+      - "3304:3306"
 
   # Laravel development server
   web:
     build:
       context: .
       dockerfile: ./Dockerfile.laravel-dev
-    volumes:    # Por alguna razón falla en producción.
-       - .:/var/www/html
     working_dir: /var/www/html
-    # volumes:
-    #   - ./volumenes:/var/www/html #ESTO CAUSA EL ERROR DEL VENDOR/AUTOLOAD que no lo encuentra
-    command: php artisan serve --host=0.0.0.0 --port=8000
+    command: sh -c "/usr/local/bin/dockerize -wait tcp://db:3306 -timeout 60s && php artisan migrate --seed  && php artisan schedule:run && php artisan serve --host=0.0.0.0 --port=8000"
     ports:
     #   - "8002:8000"
-     - "8003:8000"
+      - "8004:8000"
+    # volumes:
+    #   - .:/var/www/html #ESTO CAUSA EL ERROR DEL VENDOR/AUTOLOAD que no lo encuentra
     depends_on:
       - db
     environment:
@@ -63,3 +61,4 @@ services:
       - DB_DATABASE=job_board_ues
       - DB_USERNAME=root
       - DB_PASSWORD=
+

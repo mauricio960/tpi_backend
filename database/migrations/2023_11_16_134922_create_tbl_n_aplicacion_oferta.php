@@ -17,13 +17,17 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('fk_usuario')->nullable();
             $table->unsignedBigInteger('fk_oferta')->nullable();
+            $table->unsignedBigInteger('fk_estado_aplicacion_oferta')->nullable();
             $table->boolean('activo')->default(true);
+            $table->boolean('enviado')->default(false);
             $table->timestamps();
 
             $table->foreign('fk_usuario')
             ->references('id')->on('tbl_n_usuario')->onDelete('cascade');
             $table->foreign('fk_oferta')
             ->references('id')->on('tbl_n_oferta')->onDelete('cascade');
+            $table->foreign('fk_estado_aplicacion_oferta')
+            ->references('id')->on('tbl_n_estado_aplicacion_oferta')->onDelete('cascade');
         });
     }
 
