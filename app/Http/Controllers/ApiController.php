@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\TblNAplicacionOferta;
 use App\Models\TblNEstudiante;
@@ -13,6 +14,7 @@ use App\Models\TblNOferta;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response;
+use GuzzleHttp\Client;
 
 class ApiController extends Controller{
 
@@ -32,8 +34,10 @@ class ApiController extends Controller{
     }*/
 
     public function aplicaciones(){
-        $aplicaciones = TblNAplicacionOferta::all();
-        return response()->json($aplicaciones);
+        $jsonFilePath = storage_path('aplicaciones.json');
+        $jsonContent = file_get_contents($jsonFilePath);
+
+        return $jsonContent;
     }
 
     /*public function aplicaciones2(Request $request){

@@ -1,0 +1,57 @@
+[
+  {
+    "id_aplicacion_trabajo": 1,
+    "id_oferta": 101,
+    "id_aspirante": 201,
+    "nombre_aspirante": "María",
+    "apellidos_aspirante": "Hernández",
+    "correo_aspirante": "maria.hernandez@example.com",
+    "universidad": "Universidad de El Salvador",
+    "fecha_aplicacion": "2023-11-27",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 2,
+    "id_oferta": 102,
+    "id_aspirante": 202,
+    "nombre_aspirante": "José",
+    "apellidos_aspirante": "Ramírez",
+    "correo_aspirante": "jose.ramirez@example.com",
+    "universidad": "Universidad Tecnológica de El Salvador",
+    "fecha_aplicacion": "2023-11-28",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 3,
+    "id_oferta": 103,
+    "id_aspirante": 203,
+    "nombre_aspirante": "Sofía",
+    "apellidos_aspirante": "García",
+    "correo_aspirante": "sofia.garcia@example.com",
+    "universidad": "Universidad Nacional de El Salvador",
+    "fecha_aplicacion": "2023-11-29",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 4,
+    "id_oferta": 104,
+    "id_aspirante": 204,
+    "nombre_aspirante": "David",
+    "apellidos_aspirante": "Lara",
+    "correo_aspirante": "david.lara@example.com",
+    "universidad": "Universidad Francisco Gavidia",
+    "fecha_aplicacion": "2023-11-30",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 5,
+    "id_oferta": 105,
+    "id_aspirante": 205,
+    "nombre_aspirante": "Luisa",
+    "apellidos_aspirante": "Castro",
+    "correo_aspirante": "luisa.castro@example.com",
+    "universidad": "Universidad Dr. José Matías Delgado",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  }
+]
