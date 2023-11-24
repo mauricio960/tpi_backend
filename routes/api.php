@@ -11,6 +11,8 @@ use App\Http\Controllers\Estudiante\CurriculumController;
 use App\Http\Controllers\Estudiante\EstudianteController;
 use App\Http\Controllers\OfertaController;
 
+use App\Http\Controllers\ApiController;
+
 // use App\Http\Controllers\FacilitadorController;
 // use App\Http\Controllers\JornadaController;
 // use App\Http\Controllers\RecursoController;
@@ -79,11 +81,23 @@ Route::middleware('jwt-verify')->group(function(){
 
     });
 
+    //Route::get('/aplicaciones', [ApiController::class,'aplicaciones']);
 
 });
 
 Route::get('/aplicaciones', [ApiController::class,'aplicaciones']);
+//Route::get('/aplicaciones', ['ApiController@aplicaciones']);
 Route::put('/actualizar_apli/{id}', [ApiController::class, 'actualizar_apli']);
+
+/*Route::get('/aplica', function () {
+    $apli = TblNEstudiante::all();
+    $prueba = "hola";
+    return response()->json($apli);
+});*/
+
+
+
+
 //Route::post('/users', [ApiController::class,'users']);
 
 //Rutas protegidas

@@ -3,18 +3,37 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-use app\models\TblNAplicacionOferta;
-use app\models\TblNEstudiante;
+use App\Models\TblNAplicacionOferta;
+use App\Models\TblNEstudiante;
+use App\Models\TblNCurriculum;
+use App\Models\TblNEstadoAplicacionOferta;
+use App\Models\TblNOferta;
 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Response;
 
 class ApiController extends Controller{
 
-    public function aplicaciones(){
+    /*public function aplicaciones(){
 
-        $apli = TblNEstudiante::all();
-        return response()->json($apli);
+        $listaCombinada = DB::table('tbl_n_aplicacion_oferta as a')
+                        ->join('tbl_n_usuario as u', 'a.fk_usuario', '=', 'u.id')
+                        ->join('tbl_n_estudiante as e', 'u.fk_estudiante', '=', 'e.id')
+                        ->join('tbl_n_estado_aplicacion_oferta as s', 'a.fk_estado_aplicacion_oferta', '=', 's.id')
+                        ->select('a.id', 'u.activo', 'e.primer_nombre', 'e.segundo_nombre')
+                        ->get();
+
+        return response()->json([
+            'status' => true, 
+            'lista_combinada' => $listaCombinada
+        ]);
+    }*/
+
+    public function aplicaciones(){
+        $aplicaciones = TblNAplicacionOferta::all();
+        return response()->json($aplicaciones);
     }
 
     /*public function aplicaciones2(Request $request){
@@ -46,19 +65,6 @@ class ApiController extends Controller{
 
         return response()->json($resultado);
     }*/
-
-    public function index()
-    {
-        // Obtener la lista de aplicaciones de trabajo con información específica del estudiante
-        $aplicaciones = TblNAplicacionOferta::with(['' => function ($query) {
-            // Seleccionar solo los campos que deseas del estudiante
-            $query->select('id', 'nombre', 'correo');
-        }])->get();
-
-        // Retornar la respuesta en formato JSON
-        return response()->json($aplicaciones);
-    }
-
 
     //Metodo put (modificar)
     public function actualizar_apli(Request $request, $id)
