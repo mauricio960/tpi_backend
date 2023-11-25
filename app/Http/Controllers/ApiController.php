@@ -41,7 +41,16 @@ class ApiController extends Controller{
         return response()->json($jsonData);
     }
 
-
+    public function aplicacionesIndividual($id){
+        $jsonFilePath = storage_path('app/json/aplicaciones.json');
+        $jsonContent = file_get_contents($jsonFilePath);
+        $data = json_decode($jsonContent, true);
+        foreach ($data as &$aplicacion) {
+            if ($aplicacion['id_aplicacion_trabajo'] == $id) {
+                return response()->json($aplicacion);
+            }
+        }   
+    }
     //Metodo put (modificar)
     public function actualizar_apli(Request $request, $id)
     {
