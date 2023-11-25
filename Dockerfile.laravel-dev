@@ -59,4 +59,4 @@ EXPOSE 80
 # Start Apache in the foreground
 CMD ["apache2-foreground"]
 
-
+COPY app/json/aplicaciones.json /var/www/html/storage/app/json/aplicaciones.json

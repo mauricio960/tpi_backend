@@ -88,7 +88,7 @@ Route::middleware('jwt-verify')->group(function(){
 Route::get('/aplicaciones', [ApiController::class,'aplicaciones']);
 //Route::get('/aplicaciones', ['ApiController@aplicaciones']);
 Route::put('/actualizar_apli/{id}', [ApiController::class, 'actualizar_apli']);
-
+Route::put('/actualizar_aplir/{id}', [ApiController::class, 'actualizar_apli2']);
 /*Route::get('/aplica', function () {
     $apli = TblNEstudiante::all();
     $prueba = "hola";

@@ -34,62 +34,69 @@ class ApiController extends Controller{
     }*/
 
     public function aplicaciones(){
-        $jsonFilePath = storage_path('aplicaciones.json');
+        $jsonFilePath = storage_path('app/json/aplicaciones.json');
         $jsonContent = file_get_contents($jsonFilePath);
-
-        return $jsonContent;
+        $jsonData = json_decode($jsonContent, true);
+        //return $jsonContent;
+        return response()->json($jsonData);
     }
 
-    /*public function aplicaciones2(Request $request){
-        $students = Student::join('', 'students.id', '=', 'job_applications.student_id')
-             ->select('students.name', 'students.email', 'job_applications.position', 'job_applications.status')
-             ->get();
-    }*/
-
-    /*public function aplicaciones(Request $request){
-        $listaCombinada = TblNEstudiante::with('')->get();
-
-        // Personaliza la estructura de la respuesta
-        $resultado = $listaCombinada->map(function ($estudiante) {
-            return [
-                'id_estudiante' => $estudiante->id,
-                'nombre_estudiante' => $estudiante->nombre,
-                'solicitudes_trabajo' => $estudiante->solicitudesTrabajo->map(function ($solicitud) {
-                    return [
-                        'id_solicitud' => $solicitud->id,
-                        'descripcion_solicitud' => $solicitud->descripcion,
-                        // Agrega más atributos de la solicitud según tus necesidades
-                    ];
-                }),
-                // Agrega más atributos del estudiante según tus necesidades
-            ];
-        });
-
-        // Puedes ajustar la estructura según tus necesidades específicas
-
-        return response()->json($resultado);
-    }*/
 
     //Metodo put (modificar)
     public function actualizar_apli(Request $request, $id)
     {
-        // Validación básica, puedes personalizar según tus necesidades
-        /*$request->validate([
-            'estado' => 'required|in:pendiente,aprobada,rechazada', // Ajusta los posibles estados
-        ]);*/
+        // Validar y procesar la solicitud de actualización
+        $jsonFilePath = storage_path('app/json/aplicaciones.json');
+        $jsonContent = file_get_contents($jsonFilePath);
+        $data = json_decode($jsonContent, true);
+        $json = response()->json($request);
+        $datos = $request->json()->all();
+        $datosJson = json_encode($datos);
+        $datosDecodificados = json_decode($datosJson, true);
+        //$json = $request->json()->all();
+        //$estadoAplicacion = $json['estado_aplicacion'];
+        foreach ($data as &$aplicacion) {
+            if ($aplicacion['id_aplicacion_trabajo'] == $id) {
+                // Actualizar el estado (utiliza $request->json)
+                $aplicacion['estado_aplicacion'] = 'aceptado';
+                // Guardar los cambios en el archivo JSON
+                file_put_contents($jsonFilePath, json_encode($data, JSON_PRETTY_PRINT));
 
-        // Buscar la solicitud de trabajo por ID
-        $solicitud = TblNAplicacionOferta::find($id);
+                // Puedes devolver una respuesta JSON indicando el éxito
+                return response()->json(['message' => 'Aplicación actualizada con éxito']);
+                //return response()->json($datosDecodificados);
+            }
+        }   
 
-        if (!$solicitud) {
-            return response()->json(['message' => 'Solicitud de trabajo no encontrada'], 404);
-        }
+        // Si no se encuentra la aplicación con la ID especificada
+        return response()->json(['error' => 'Aplicación no encontrada'], 404);
+    }
 
-        // Actualizar el estado de la solicitud
-        $solicitud->estado = $request->input('estado');
-        $solicitud->save();
+    public function actualizar_apli2(Request $request, $id){
+        // Validar y procesar la solicitud de actualización
+        $jsonFilePath = storage_path('app/json/aplicaciones.json');
+        $jsonContent = file_get_contents($jsonFilePath);
+        $data = json_decode($jsonContent, true);
+        $json = response()->json($request);
+        $datos = $request->json()->all();
+        $datosJson = json_encode($datos);
+        $datosDecodificados = json_decode($datosJson, true);
+        //$json = $request->json()->all();
+        //$estadoAplicacion = $json['estado_aplicacion'];
+        foreach ($data as &$aplicacion) {
+            if ($aplicacion['id_aplicacion_trabajo'] == $id) {
+                // Actualizar el estado (utiliza $request->json)
+                $aplicacion['estado_aplicacion'] = 'rechazado';
+                // Guardar los cambios en el archivo JSON
+                file_put_contents($jsonFilePath, json_encode($data, JSON_PRETTY_PRINT));
 
-        // Retornar la respuesta en formato JSON
-        return response()->json(['message' => 'Estado de la solicitud de trabajo actualizado con éxito']);
+                // Puedes devolver una respuesta JSON indicando el éxito
+                return response()->json(['message' => 'Aplicación actualizada con éxito']);
+                //return response()->json($datosDecodificados);
+            }
+        }   
+
+        // Si no se encuentra la aplicación con la ID especificada
+        return response()->json(['error' => 'Aplicación no encontrada'], 404);
     }
 }
