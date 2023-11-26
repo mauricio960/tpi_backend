@@ -116,13 +116,22 @@ class ApiController extends Controller{
         ->join('tbl_n_experiencia_academica AS EA', 'CU.id', '=', 'EA.fk_curriculum')
         ->join('tbl_n_aplicacion_oferta AS APF', 'US.id', '=', 'APF.fk_usuario')
         ->join('tbl_n_oferta AS OF', 'APF.fk_oferta', '=', 'OF.id')
-        ->select('APF.id AS aplicacion_oferta_id', 'OF.id AS oferta_id', 'ES.id AS estudiante_id', 
-        'ES.primer_nombre', 'ES.primer_apellido', 'US.email', 'EA.institucion_academica', 'APF.created_at')
+        ->join('tbl_n_estado_aplicacion_oferta AS EOF', 'APF.fk_estado_aplicacion_oferta','=','EOF.id' )
+        ->select('APF.id AS id_aplicacion_trabajo', 'OF.id AS id_oferta', 'ES.id AS id_aspirante', 
+        'ES.primer_nombre AS nombre_aspirante', 'ES.primer_apellido AS apellidos_aspirante',
+         'US.email AS correo_aspirante', 'EA.institucion_academica AS universidad', 
+         'APF.created_at AS fecha_aplicacion', 'EOF.estado_aplicacion_oferta AS estado_aplicacion')
         ->get();
 
-        return response()->json([
-                    'status' => true, 
-                    'resultados' => $resultados
-                ]);
+        return response()->json(
+                    $resultados,
+                    200, 
+                    [], 
+                    JSON_UNESCAPED_UNICODE
+                );
+    }
+
+    public function actualizarapli(Request $request, $id){
+        
     }
 }
