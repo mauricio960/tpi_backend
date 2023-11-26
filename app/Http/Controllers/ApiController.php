@@ -111,15 +111,18 @@ class ApiController extends Controller{
 
     public function listadoapli(){
         $resultados = DB::table('tbl_n_estudiante AS ES')
-            ->join('tbl_n_usuario AS US', 'ES.id', '=', 'US.fk_estudiante')
-            ->join('tbl_n_aplicacion_oferta AS APF', 'US.id', '=', 'APF.fk_usuario')
-            ->select('ES.*', 'US.*', 'APF.*')
-            ->orderBy('APF.id')
-            ->get();
+        ->join('tbl_n_usuario AS US', 'ES.id', '=', 'US.fk_estudiante')
+        ->join('tbl_n_curriculum AS CU', 'US.id', '=', 'CU.fk_usuario')
+        ->join('tbl_n_experiencia_academica AS EA', 'CU.id', '=', 'EA.fk_curriculum')
+        ->join('tbl_n_aplicacion_oferta AS APF', 'US.id', '=', 'APF.fk_usuario')
+        ->join('tbl_n_oferta AS OF', 'APF.fk_oferta', '=', 'OF.id')
+        ->select('APF.id AS aplicacion_oferta_id', 'OF.id AS oferta_id', 'ES.id AS estudiante_id', 
+        'ES.primer_nombre', 'ES.primer_apellido', 'US.email', 'EA.institucion_academica', 'APF.created_at')
+        ->get();
 
         return response()->json([
-            'status' => true, 
-            'resultados' => $resultados 
-        ]);        
+                    'status' => true, 
+                    'resultados' => $resultados
+                ]);
     }
 }
