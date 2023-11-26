@@ -132,6 +132,44 @@ class ApiController extends Controller{
     }
 
     public function actualizarapli(Request $request, $id){
-        
+        // Validar y encontrar la solicitud de trabajo por ID
+        $solicitud = TblNAplicacionOferta::findOrFail($id);
+        $estados = TblNEstadoAplicacionOferta::all();
+        // Inicializar una variable para almacenar el estado encontrado
+        $estadoEncontrado = 11;
+
+        // Recorrer los estados de solicitud
+        foreach ($estados as $estado) {
+            // Verificar si la llave foránea coincide
+            if ($estado['id'] == $solicitud['fk_estado_aplicacion_oferta']) {
+                $solicitud['fk_estado_aplicacion_oferta']=$estadoEncontrado;
+                $solicitud->save();
+                break; // Romper el bucle cuando se encuentra el estado
+            }
+        }
+
+        // Puedes devolver el estado encontrado o null si no se encontró ninguno
+        return response()->json(['estado' => $solicitud], 200);
+    }
+
+    public function actualizaraplir(Request $request, $id){
+        // Validar y encontrar la solicitud de trabajo por ID
+        $solicitud = TblNAplicacionOferta::findOrFail($id);
+        $estados = TblNEstadoAplicacionOferta::all();
+        // Inicializar una variable para almacenar el estado encontrado
+        $estadoEncontrado = 12;
+
+        // Recorrer los estados de solicitud
+        foreach ($estados as $estado) {
+            // Verificar si la llave foránea coincide
+            if ($estado['id'] == $solicitud['fk_estado_aplicacion_oferta']) {
+                $solicitud['fk_estado_aplicacion_oferta']=$estadoEncontrado;
+                $solicitud->save();
+                break; // Romper el bucle cuando se encuentra el estado
+            }
+        }
+
+        // Puedes devolver el estado encontrado o null si no se encontró ninguno
+        return response()->json(['estado' => $solicitud], 200);
     }
 }

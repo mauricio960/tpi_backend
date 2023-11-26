@@ -401,6 +401,14 @@ class catalogoSeeder extends Seeder
         $estado_aplicacion_oferta->estado_aplicacion_oferta="Retirado por el candidato";
         $estado_aplicacion_oferta->save();
 
+        $estado_aplicacion_oferta = new TblNEstadoAplicacionOferta();
+        $estado_aplicacion_oferta->estado_aplicacion_oferta="Aceptado";
+        $estado_aplicacion_oferta->save();
+
+        $estado_aplicacion_oferta = new TblNEstadoAplicacionOferta();
+        $estado_aplicacion_oferta->estado_aplicacion_oferta="Rechazado";
+        $estado_aplicacion_oferta->save();
+
 
         $modulo = new TblNTipoRecurso();
         $modulo->tipo_recurso = "Servicios";
