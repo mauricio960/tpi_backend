@@ -1,0 +1,178 @@
+[
+  {
+    "id_aplicacion_trabajo": 1,
+    "id_oferta": 12,
+    "id_aspirante": 2,
+    "nombre_aspirante": "María Esmeralda",
+    "apellidos_aspirante": "Martínez Hernández",
+    "correo_aspirante": "maria.hernandez@gmail.com",
+    "universidad": "Universidad de El Salvador",
+    "fecha_aplicacion": "2023-11-27",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 2,
+    "id_oferta": 12,
+    "id_aspirante": 1,
+    "nombre_aspirante": "José Antonio",
+    "apellidos_aspirante": "Ramírez Lopez",
+    "correo_aspirante": "jose.ramirez@gmail.com",
+    "universidad": "Universidad Tecnológica de El Salvador",
+    "fecha_aplicacion": "2023-11-28",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 3,
+    "id_oferta": 13,
+    "id_aspirante": 3,
+    "nombre_aspirante": "Sofía Lissette",
+    "apellidos_aspirante": "García Guerra",
+    "correo_aspirante": "sofia.garcia@gmail.com",
+    "universidad": "Universidad Nacional de El Salvador",
+    "fecha_aplicacion": "2023-11-29",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 4,
+    "id_oferta": 13,
+    "id_aspirante": 4,
+    "nombre_aspirante": "David Ernesto",
+    "apellidos_aspirante": "Lara Salguero",
+    "correo_aspirante": "david.lara@gmail.com",
+    "universidad": "Universidad Francisco Gavidia",
+    "fecha_aplicacion": "2023-11-30",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 5,
+    "id_oferta": 14,
+    "id_aspirante": 5,
+    "nombre_aspirante": "Luisa Isabel",
+    "apellidos_aspirante": "Castro Mendez",
+    "correo_aspirante": "luisa.castro@gmail.com",
+    "universidad": "Universidad Dr. José Matías Delgado",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 1,
+    "id_oferta": 12,
+    "id_aspirante": 1,
+    "nombre_aspirante": "José Antonio",
+    "apellidos_aspirante": "Ramírez Lopez",
+    "correo_aspirante": "jose.ramirez@gmail.com",
+    "universidad": "Universidad Tecnológica de El Salvador",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 3,
+    "id_oferta": 14,
+    "id_aspirante": 3,
+    "nombre_aspirante": "Sofía Lissette",
+    "apellidos_aspirante": "García Guerra",
+    "correo_aspirante": "sofia.garcia@gmail.com",
+    "universidad": "Universidad Nacional de El Salvador",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 2,
+    "id_oferta": 13,
+    "id_aspirante": 2,
+    "nombre_aspirante": "María Esmeralda",
+    "apellidos_aspirante": "Martínez Hernández",
+    "correo_aspirante": "maria.hernandez@gmail.com",
+    "universidad": "Universidad de El Salvador",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 4,
+    "id_oferta": 15,
+    "id_aspirante": 4,
+    "nombre_aspirante": "David Ernesto",
+    "apellidos_aspirante": "Lara Salguero",
+    "correo_aspirante": "david.lara@gmail.com",
+    "universidad": "Universidad Francisco Gavidia",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 5,
+    "id_oferta": 16,
+    "id_aspirante": 5,
+    "nombre_aspirante": "Luisa Isabel",
+    "apellidos_aspirante": "Castro Mendez",
+    "correo_aspirante": "luisa.castro@gmail.com",
+    "universidad": "Universidad Dr. José Matías Delgado",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 6,
+    "id_oferta": 17,
+    "id_aspirante": 1,
+    "nombre_aspirante": "José Antonio",
+    "apellidos_aspirante": "Ramírez Lopez",
+    "correo_aspirante": "jose.ramirez@gmail.com",
+    "universidad": "Universidad Tecnológica de El Salvador",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 7,
+    "id_oferta": 18,
+    "id_aspirante": 2,
+    "nombre_aspirante": "María Esmeralda",
+    "apellidos_aspirante": "Martínez Hernández",
+    "correo_aspirante": "maria.hernandez@gmail.com",
+    "universidad": "Universidad de El Salvador",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 9,
+    "id_oferta": 12,
+    "id_aspirante": 4,
+    "nombre_aspirante": "David Ernesto",
+    "apellidos_aspirante": "Lara Salguero",
+    "correo_aspirante": "david.lara@gmail.com",
+    "universidad": "Universidad Francisco Gavidia",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 10,
+    "id_oferta": 13,
+    "id_aspirante": 5,
+    "nombre_aspirante": "Luisa Isabel",
+    "apellidos_aspirante": "Castro Mendez",
+    "correo_aspirante": "luisa.castro@gmail.com",
+    "universidad": "Universidad Dr. José Matías Delgado",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 11,
+    "id_oferta": 14,
+    "id_aspirante": 1,
+    "nombre_aspirante": "José Antonio",
+    "apellidos_aspirante": "Ramírez Lopez",
+    "correo_aspirante": "jose.ramirez@gmail.com",
+    "universidad": "Universidad Tecnológica de El Salvador",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  },
+  {
+    "id_aplicacion_trabajo": 12,
+    "id_oferta": 15,
+    "id_aspirante": 2,
+    "nombre_aspirante": "María Esmeralda",
+    "apellidos_aspirante": "Martínez Hernández",
+    "correo_aspirante": "maria.hernandez@gmail.com",
+    "universidad": "Universidad de El Salvador",
+    "fecha_aplicacion": "2023-12-01",
+    "estado_aplicacion": "En espera"
+  }
+]

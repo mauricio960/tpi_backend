@@ -86,6 +86,7 @@ Route::middleware('jwt-verify')->group(function(){
 });
 
 Route::get('/aplicaciones', [ApiController::class,'aplicaciones']);
+Route::get('/listado', [ApiController::class,'listadoApli']);
 Route::get('/aplicaciones/{id}', [ApiController::class,'aplicacionesIndividual']);
 //Route::get('/aplicaciones', ['ApiController@aplicaciones']);
 Route::put('/actualizar_apli/{id}', [ApiController::class, 'actualizar_apli']);

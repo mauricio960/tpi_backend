@@ -34,20 +34,20 @@ class ApiController extends Controller{
     }*/
 
     public function aplicaciones(){
-        $jsonFilePath = storage_path('app/json/aplicaciones.json');
+        $jsonFilePath = storage_path('aplicaciones.json');
         $jsonContent = file_get_contents($jsonFilePath);
         $jsonData = json_decode($jsonContent, true);
         //return $jsonContent;
-        return response()->json($jsonData);
+        return response()->json($jsonData, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function aplicacionesIndividual($id){
-        $jsonFilePath = storage_path('app/json/aplicaciones.json');
+        $jsonFilePath = storage_path('aplicaciones.json');
         $jsonContent = file_get_contents($jsonFilePath);
         $data = json_decode($jsonContent, true);
         foreach ($data as &$aplicacion) {
             if ($aplicacion['id_aplicacion_trabajo'] == $id) {
-                return response()->json($aplicacion);
+                return response()->json($aplicacion, 200, [], JSON_UNESCAPED_UNICODE);
             }
         }   
     }
@@ -55,7 +55,7 @@ class ApiController extends Controller{
     public function actualizar_apli(Request $request, $id)
     {
         // Validar y procesar la solicitud de actualización
-        $jsonFilePath = storage_path('app/json/aplicaciones.json');
+        $jsonFilePath = storage_path('aplicaciones.json');
         $jsonContent = file_get_contents($jsonFilePath);
         $data = json_decode($jsonContent, true);
         $json = response()->json($request);
@@ -107,5 +107,19 @@ class ApiController extends Controller{
 
         // Si no se encuentra la aplicación con la ID especificada
         return response()->json(['error' => 'Aplicación no encontrada'], 404);
+    }
+
+    public function listadoapli(){
+        $resultados = DB::table('tbl_n_estudiante AS ES')
+            ->join('tbl_n_usuario AS US', 'ES.id', '=', 'US.fk_estudiante')
+            ->join('tbl_n_aplicacion_oferta AS APF', 'US.id', '=', 'APF.fk_usuario')
+            ->select('ES.*', 'US.*', 'APF.*')
+            ->orderBy('APF.id')
+            ->get();
+
+        return response()->json([
+            'status' => true, 
+            'resultados' => $resultados 
+        ]);        
     }
 }
