@@ -18,20 +18,80 @@ use GuzzleHttp\Client;
 
 class ApiController extends Controller{
 
-    /*public function aplicaciones(){
 
-        $listaCombinada = DB::table('tbl_n_aplicacion_oferta as a')
-                        ->join('tbl_n_usuario as u', 'a.fk_usuario', '=', 'u.id')
-                        ->join('tbl_n_estudiante as e', 'u.fk_estudiante', '=', 'e.id')
-                        ->join('tbl_n_estado_aplicacion_oferta as s', 'a.fk_estado_aplicacion_oferta', '=', 's.id')
-                        ->select('a.id', 'u.activo', 'e.primer_nombre', 'e.segundo_nombre')
-                        ->get();
+    //Datos dinamicos
 
-        return response()->json([
-            'status' => true, 
-            'lista_combinada' => $listaCombinada
-        ]);
-    }*/
+    //Obtener listado de aplicantes para grupo 02
+    public function listadoapli(){
+        $resultados = DB::table('tbl_n_estudiante AS ES')
+        ->join('tbl_n_usuario AS US', 'ES.id', '=', 'US.fk_estudiante')
+        ->join('tbl_n_curriculum AS CU', 'US.id', '=', 'CU.fk_usuario')
+        ->join('tbl_n_experiencia_academica AS EA', 'CU.id', '=', 'EA.fk_curriculum')
+        ->join('tbl_n_aplicacion_oferta AS APF', 'US.id', '=', 'APF.fk_usuario')
+        ->join('tbl_n_oferta AS OF', 'APF.fk_oferta', '=', 'OF.id')
+        ->join('tbl_n_estado_aplicacion_oferta AS EOF', 'APF.fk_estado_aplicacion_oferta','=','EOF.id' )
+        ->select('APF.id AS id_aplicacion_trabajo', 'OF.id AS id_oferta', 'ES.id AS id_aspirante', 
+        'ES.primer_nombre AS nombre_aspirante', 'ES.primer_apellido AS apellidos_aspirante',
+         'US.email AS correo_aspirante', 'EA.institucion_academica AS universidad', 
+         'APF.created_at AS fecha_aplicacion', 'EOF.estado_aplicacion_oferta AS estado_aplicacion')
+        ->get();
+
+        return response()->json(
+                    $resultados,
+                    200, 
+                    [], 
+                    JSON_UNESCAPED_UNICODE
+                );
+    }
+
+    //Actualizar el estado de aplicantes para grupo 02
+    public function actualizarapli(Request $request, $id){
+        // Validar y encontrar la solicitud de trabajo por ID
+        $solicitud = TblNAplicacionOferta::findOrFail($id);
+        $estados = TblNEstadoAplicacionOferta::all();
+        // Inicializar una variable para almacenar el estado encontrado
+        $estadoEncontrado = 11;
+
+        // Recorrer los estados de solicitud
+        foreach ($estados as $estado) {
+            // Verificar si la llave foránea coincide
+            if ($estado['id'] == $solicitud['fk_estado_aplicacion_oferta']) {
+                $solicitud['fk_estado_aplicacion_oferta']=$estadoEncontrado;
+                $solicitud->save();
+                break; // Romper el bucle cuando se encuentra el estado
+            }
+        }
+
+        // Puedes devolver el estado encontrado o null si no se encontró ninguno
+        return response()->json(['estado' => $solicitud], 200);
+    }
+
+    //Actualizar el estado de aplicantes para grupo 02
+    public function actualizaraplir(Request $request, $id){
+        // Validar y encontrar la solicitud de trabajo por ID
+        $solicitud = TblNAplicacionOferta::findOrFail($id);
+        $estados = TblNEstadoAplicacionOferta::all();
+        // Inicializar una variable para almacenar el estado encontrado
+        $estadoEncontrado = 12;
+
+        // Recorrer los estados de solicitud
+        foreach ($estados as $estado) {
+            // Verificar si la llave foránea coincide
+            if ($estado['id'] == $solicitud['fk_estado_aplicacion_oferta']) {
+                $solicitud['fk_estado_aplicacion_oferta']=$estadoEncontrado;
+                $solicitud->save();
+                break; // Romper el bucle cuando se encuentra el estado
+            }
+        }
+
+        // Puedes devolver el estado encontrado o null si no se encontró ninguno
+        return response()->json(['estado' => $solicitud], 200);
+    }
+
+
+
+    //datos estaticos
+
 
     public function aplicaciones(){
         $jsonFilePath = storage_path('aplicaciones.json');
@@ -109,67 +169,5 @@ class ApiController extends Controller{
         return response()->json(['error' => 'Aplicación no encontrada'], 404);
     }
 
-    public function listadoapli(){
-        $resultados = DB::table('tbl_n_estudiante AS ES')
-        ->join('tbl_n_usuario AS US', 'ES.id', '=', 'US.fk_estudiante')
-        ->join('tbl_n_curriculum AS CU', 'US.id', '=', 'CU.fk_usuario')
-        ->join('tbl_n_experiencia_academica AS EA', 'CU.id', '=', 'EA.fk_curriculum')
-        ->join('tbl_n_aplicacion_oferta AS APF', 'US.id', '=', 'APF.fk_usuario')
-        ->join('tbl_n_oferta AS OF', 'APF.fk_oferta', '=', 'OF.id')
-        ->join('tbl_n_estado_aplicacion_oferta AS EOF', 'APF.fk_estado_aplicacion_oferta','=','EOF.id' )
-        ->select('APF.id AS id_aplicacion_trabajo', 'OF.id AS id_oferta', 'ES.id AS id_aspirante', 
-        'ES.primer_nombre AS nombre_aspirante', 'ES.primer_apellido AS apellidos_aspirante',
-         'US.email AS correo_aspirante', 'EA.institucion_academica AS universidad', 
-         'APF.created_at AS fecha_aplicacion', 'EOF.estado_aplicacion_oferta AS estado_aplicacion')
-        ->get();
 
-        return response()->json(
-                    $resultados,
-                    200, 
-                    [], 
-                    JSON_UNESCAPED_UNICODE
-                );
-    }
-
-    public function actualizarapli(Request $request, $id){
-        // Validar y encontrar la solicitud de trabajo por ID
-        $solicitud = TblNAplicacionOferta::findOrFail($id);
-        $estados = TblNEstadoAplicacionOferta::all();
-        // Inicializar una variable para almacenar el estado encontrado
-        $estadoEncontrado = 11;
-
-        // Recorrer los estados de solicitud
-        foreach ($estados as $estado) {
-            // Verificar si la llave foránea coincide
-            if ($estado['id'] == $solicitud['fk_estado_aplicacion_oferta']) {
-                $solicitud['fk_estado_aplicacion_oferta']=$estadoEncontrado;
-                $solicitud->save();
-                break; // Romper el bucle cuando se encuentra el estado
-            }
-        }
-
-        // Puedes devolver el estado encontrado o null si no se encontró ninguno
-        return response()->json(['estado' => $solicitud], 200);
-    }
-
-    public function actualizaraplir(Request $request, $id){
-        // Validar y encontrar la solicitud de trabajo por ID
-        $solicitud = TblNAplicacionOferta::findOrFail($id);
-        $estados = TblNEstadoAplicacionOferta::all();
-        // Inicializar una variable para almacenar el estado encontrado
-        $estadoEncontrado = 12;
-
-        // Recorrer los estados de solicitud
-        foreach ($estados as $estado) {
-            // Verificar si la llave foránea coincide
-            if ($estado['id'] == $solicitud['fk_estado_aplicacion_oferta']) {
-                $solicitud['fk_estado_aplicacion_oferta']=$estadoEncontrado;
-                $solicitud->save();
-                break; // Romper el bucle cuando se encuentra el estado
-            }
-        }
-
-        // Puedes devolver el estado encontrado o null si no se encontró ninguno
-        return response()->json(['estado' => $solicitud], 200);
-    }
 }

@@ -85,19 +85,20 @@ Route::middleware('jwt-verify')->group(function(){
 
 });
 
-Route::get('/aplicaciones', [ApiController::class,'aplicaciones']);
+//Rutas para el otro grupo
 Route::get('/listado', [ApiController::class,'listadoApli']);
-Route::get('/aplicaciones/{id}', [ApiController::class,'aplicacionesIndividual']);
-//Route::get('/aplicaciones', ['ApiController@aplicaciones']);
-Route::put('/actualizar_apli/{id}', [ApiController::class, 'actualizar_apli']);
-Route::put('/actualizar_aplir/{id}', [ApiController::class, 'actualizar_apli2']);
 Route::put('/actualizarapli/{id}', [ApiController::class, 'actualizarapli']);
 Route::put('/actualizaraplir/{id}', [ApiController::class, 'actualizaraplir']);
-/*Route::get('/aplica', function () {
-    $apli = TblNEstudiante::all();
-    $prueba = "hola";
-    return response()->json($apli);
-});*/
+
+
+
+
+//Json
+Route::get('/aplicaciones', [ApiController::class,'aplicaciones']);
+Route::get('/aplicaciones/{id}', [ApiController::class,'aplicacionesIndividual']);
+Route::put('/actualizar_apli/{id}', [ApiController::class, 'actualizar_apli']);
+Route::put('/actualizar_aplir/{id}', [ApiController::class, 'actualizar_apli2']);
+
 
 
 
